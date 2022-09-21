@@ -5,6 +5,7 @@ import com.blogapp.entity.User;
 import com.blogapp.exception.ResourceNotFoundException;
 import com.blogapp.repository.UserRepository;
 import com.blogapp.service.definition.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -65,22 +68,23 @@ public class UserServiceImpl implements UserService {
 
     //this is called model mapper
     private User dtoToEntity(UserRequestDto userRequestDto){
-        User user = new User();
-        user.setId(userRequestDto.getId());
-        user.setName(userRequestDto.getName());
-        user.setEmail(userRequestDto.getEmail());
-        user.setAbout(userRequestDto.getAbout());
-        user.setPassword((userRequestDto.getPassword()));
+        User user = modelMapper.map(userRequestDto, User.class);
+//        user.setId(userRequestDto.getId());
+//        user.setName(userRequestDto.getName());
+//        user.setEmail(userRequestDto.getEmail());
+//        user.setAbout(userRequestDto.getAbout());
+//        user.setPassword((userRequestDto.getPassword()));
         return user;
     }
 
     private UserRequestDto entityToDto(User user){
-        UserRequestDto userRequestDto = new UserRequestDto();
-        userRequestDto.setId(user.getId());
-        userRequestDto.setName(user.getName());
-        userRequestDto.setEmail(user.getEmail());
-        userRequestDto.setPassword(user.getPassword());
-        userRequestDto.setAbout(user.getAbout());
+        UserRequestDto userRequestDto = modelMapper.map(user,UserRequestDto.class);
+//        UserRequestDto userRequestDto = new UserRequestDto();
+//        userRequestDto.setId(user.getId());
+//        userRequestDto.setName(user.getName());
+//        userRequestDto.setEmail(user.getEmail());
+//        userRequestDto.setPassword(user.getPassword());
+//        userRequestDto.setAbout(user.getAbout());
         return userRequestDto;
     }
 }
