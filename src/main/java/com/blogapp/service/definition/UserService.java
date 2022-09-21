@@ -1,7 +1,6 @@
 package com.blogapp.service.definition;
 
 import com.blogapp.dto.UserRequestDto;
-import com.blogapp.dto.UserResponseDto;
 
 import java.util.List;
 
