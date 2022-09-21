@@ -1,7 +1,8 @@
 package com.blogapp.controller.implementation;
 
 import com.blogapp.controller.definition.UserController;
-import com.blogapp.dto.UserRequestDto;
+import com.blogapp.dto.userdto.UserRequestDto;
+import com.blogapp.dto.userdto.UserResponseDto;
 import com.blogapp.payloads.ApiResponse;
 import com.blogapp.service.definition.UserService;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class UserControllerImpl implements UserController {
@@ -21,26 +21,26 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<UserRequestDto> createUser(UserRequestDto userRequestDto) {
-        UserRequestDto dto = userService.createUser(userRequestDto);
+    public ResponseEntity<UserResponseDto> createUser(UserRequestDto userRequestDto) {
+        UserResponseDto dto = userService.createUser(userRequestDto);
         return new ResponseEntity<>(dto,HttpStatus.CREATED);
     }
 
 
     @Override
-    public List<UserRequestDto> getAllUser() {
+    public List<UserResponseDto> getAllUser() {
         return userService.getAllUsers();
     }
 
     @Override
-    public ResponseEntity<UserRequestDto> getUser(Long id) {
-        UserRequestDto getUser = userService.getUser(id);
+    public ResponseEntity<UserResponseDto> getUser(Long id) {
+        UserResponseDto getUser = userService.getUser(id);
         return ResponseEntity.ok(getUser);
     }
 
     @Override
-    public ResponseEntity<UserRequestDto> updateUser(UserRequestDto userRequestDto, Long id) {
-        UserRequestDto requestDto = userService.updateUser(id,userRequestDto);
+    public ResponseEntity<UserResponseDto> updateUser(UserRequestDto userRequestDto, Long id) {
+        UserResponseDto requestDto = userService.updateUser(id,userRequestDto);
         return ResponseEntity.ok(requestDto);
     }
 
