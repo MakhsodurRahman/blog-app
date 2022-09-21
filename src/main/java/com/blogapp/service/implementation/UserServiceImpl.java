@@ -1,15 +1,16 @@
 package com.blogapp.service.implementation;
 
 import com.blogapp.dto.UserRequestDto;
-import com.blogapp.dto.UserResponseDto;
 import com.blogapp.entity.User;
 import com.blogapp.exception.ResourceNotFoundException;
 import com.blogapp.repository.UserRepository;
 import com.blogapp.service.definition.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -69,6 +70,7 @@ public class UserServiceImpl implements UserService {
         user.setName(userRequestDto.getName());
         user.setEmail(userRequestDto.getEmail());
         user.setAbout(userRequestDto.getAbout());
+        user.setPassword((userRequestDto.getPassword()));
         return user;
     }
 
@@ -76,6 +78,7 @@ public class UserServiceImpl implements UserService {
         UserRequestDto userRequestDto = new UserRequestDto();
         userRequestDto.setId(user.getId());
         userRequestDto.setName(user.getName());
+        userRequestDto.setEmail(user.getEmail());
         userRequestDto.setPassword(user.getPassword());
         userRequestDto.setAbout(user.getAbout());
         return userRequestDto;
