@@ -1,6 +1,7 @@
 package com.blogapp.service.implementation;
 
-import com.blogapp.dto.UserRequestDto;
+import com.blogapp.dto.userdto.UserRequestDto;
+import com.blogapp.dto.userdto.UserResponseDto;
 import com.blogapp.entity.User;
 import com.blogapp.exception.ResourceNotFoundException;
 import com.blogapp.repository.UserRepository;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRequestDto createUser(UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
 
         User user = dtoToEntity(userRequestDto);
         User saveUser = userRepository.save(user);
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRequestDto updateUser(Long id, UserRequestDto userRequestDto) {
+    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id).orElseThrow((()->  new ResourceNotFoundException("user "," id ",id)));
 
         user.setName(userRequestDto.getName());
@@ -40,23 +41,23 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userRequestDto.getPassword());
         user.setAbout(userRequestDto.getAbout());
         User updateUser = userRepository.save(user);
-        UserRequestDto dto = entityToDto(updateUser);
+        UserResponseDto dto = entityToDto(updateUser);
         return dto;
     }
 
     @Override
-    public UserRequestDto getUser(Long id) {
+    public UserResponseDto getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow((()->  new ResourceNotFoundException("user "," id ",id)));
 
-        UserRequestDto findUser = entityToDto(user);
+        UserResponseDto findUser = entityToDto(user);
         return findUser;
     }
 
     @Override
-    public List<UserRequestDto> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
 
         List<User> users = userRepository.findAll();
-        List<UserRequestDto> dto = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
+        List<UserResponseDto> dto = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
         return dto;
     }
 
@@ -77,14 +78,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private UserRequestDto entityToDto(User user){
-        UserRequestDto userRequestDto = modelMapper.map(user,UserRequestDto.class);
+    private UserResponseDto entityToDto(User user){
+        UserResponseDto userResponseDto = modelMapper.map(user,UserResponseDto.class);
 //        UserRequestDto userRequestDto = new UserRequestDto();
 //        userRequestDto.setId(user.getId());
 //        userRequestDto.setName(user.getName());
 //        userRequestDto.setEmail(user.getEmail());
 //        userRequestDto.setPassword(user.getPassword());
 //        userRequestDto.setAbout(user.getAbout());
-        return userRequestDto;
+        return userResponseDto;
     }
 }
