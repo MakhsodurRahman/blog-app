@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+
 @Getter
 @Setter
+@NoArgsConstructor
 public class CategoryResponseDto {
 
     private Long categoryId;
