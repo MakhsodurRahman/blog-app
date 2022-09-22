@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class UserResponseDto {
 
+    private Long id;
     private String name;
     private String email;
     private String password;
