@@ -3,12 +3,14 @@ package com.blogapp.service.implementation;
 import com.blogapp.dto.categorydto.CategoryRequestDto;
 import com.blogapp.dto.categorydto.CategoryResponseDto;
 import com.blogapp.entity.Category;
+import com.blogapp.exception.ResourceNotFoundException;
 import com.blogapp.repository.CategoryRepository;
 import com.blogapp.service.definition.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -30,22 +32,34 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto categoryRequestDto) {
-        return null;
+        Category category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("category "," id ",id));
+
+        category.setCategoryTitle(categoryRequestDto.getCategoryTitle());
+        category.setCategoryDescription(categoryRequestDto.getCategoryDescription());
+        Category saveCategory = categoryRepository.save(category);
+        CategoryResponseDto dto = entityToDto(saveCategory);
+        return dto;
     }
 
     @Override
     public void deleteCategory(Long id) {
-
+        Category category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("category "," id ",id));
+        categoryRepository.delete(category);
     }
 
     @Override
     public CategoryResponseDto getCategory(Long id) {
-        return null;
+        Category category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("category "," id ",id));
+        CategoryResponseDto responseDto = entityToDto(category);
+        return responseDto;
     }
 
     @Override
     public List<CategoryResponseDto> getAllCategory() {
-        return null;
+
+        List<Category> category = categoryRepository.findAll();
+        List<CategoryResponseDto> getAll = category.stream().map(category1 -> entityToDto(category1)).collect(Collectors.toList());
+        return getAll;
     }
 
     private Category dtoToEntity(CategoryRequestDto categoryRequestDto){
