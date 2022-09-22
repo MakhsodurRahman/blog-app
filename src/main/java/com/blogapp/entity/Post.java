@@ -15,8 +15,8 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @Column(name = "post_title",length = 100,nullable = false)
-    private String name;
+    @Column(name = "post_title")
+    private String postTitle;
 
     @Column(name = "content")
     private String content;
