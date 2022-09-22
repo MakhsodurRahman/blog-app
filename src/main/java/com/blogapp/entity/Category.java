@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -20,4 +22,7 @@ public class Category implements Serializable {
 
         @Column(name = "category_description")
         private String categoryDescription;
+
+        @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        private List<Post> posts = new ArrayList<>();
 }
