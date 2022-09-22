@@ -10,17 +10,17 @@ public interface PostService {
 
     PostResponseDto createPost(PostRequestDto postRequestDto, Long userId, Long categoryId);
 
-    Post UpdatePost(PostRequestDto postRequestDto,Long id);
+    PostResponseDto UpdatePost(PostRequestDto postRequestDto,Long id);
 
     void deletePost(Long id);
 
-    Post getPostById(Long id);
+    PostResponseDto getPostById(Long id);
 
-    List<Post> getAllPost();
+    List<PostResponseDto> getAllPost();
 
-    List<Post> getPostByCategory(Long categoryId);
+    List<PostResponseDto> getPostByCategory(Long categoryId);
 
-    List<Post> getPostByUser(Long userId);
+    List<PostResponseDto> getPostByUser(Long userId);
 
-    List<Post> searchPost(String keyword);
+    List<PostResponseDto> searchPost(String keyword);
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -48,7 +49,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post UpdatePost(PostRequestDto postRequestDto, Long id) {
+    public PostResponseDto UpdatePost(PostRequestDto postRequestDto, Long id) {
         return null;
     }
 
@@ -58,27 +59,40 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostById(Long id) {
+    public PostResponseDto getPostById(Long id) {
         return null;
     }
 
     @Override
-    public List<Post> getAllPost() {
-        return null;
+    public List<PostResponseDto> getAllPost() {
+        List<Post> posts = postRepository.findAll();
+
+        List<PostResponseDto> responseDtos = posts.stream().map((post)-> modelMapper.map(post,PostResponseDto.class)).collect(Collectors.toList());
+        return responseDtos;
     }
 
     @Override
-    public List<Post> getPostByCategory(Long categoryId) {
-        return null;
+    public List<PostResponseDto> getPostByCategory(Long categoryId) {
+
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("category "," id ",categoryId));
+
+        List<Post> posts = postRepository.findByCategory(category);
+        List<PostResponseDto> postDto = posts.stream().map((post) -> modelMapper.map(post, PostResponseDto.class)).collect(Collectors.toList());
+        return postDto;
     }
 
     @Override
-    public List<Post> getPostByUser(Long userId) {
-        return null;
+    public List<PostResponseDto> getPostByUser(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user "," id ",userId));
+
+        List<Post> posts = postRepository.findByUser(user);
+        List<PostResponseDto> postDto = posts.stream().map((post) -> modelMapper.map(post,PostResponseDto.class)).collect(Collectors.toList());
+        return postDto;
     }
 
     @Override
-    public List<Post> searchPost(String keyword) {
+    public List<PostResponseDto> searchPost(String keyword) {
         return null;
     }
 }
