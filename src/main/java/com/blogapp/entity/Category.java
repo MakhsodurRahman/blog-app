@@ -1,24 +1,21 @@
 package com.blogapp.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Setter
-@Getter
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category implements Serializable {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "category_id")
+        @Column(name = "id")
         private Long id;
 
-        @Column(name = "category_title",length = 100, nullable = false)
+        @Column(name = "category_title")
         private String categoryTitle;
 
         @Column(name = "category_description")
