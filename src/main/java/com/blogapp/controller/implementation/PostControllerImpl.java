@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class PostControllerImpl implements PostController {
     private final PostService postService;
@@ -20,5 +22,26 @@ public class PostControllerImpl implements PostController {
     public ResponseEntity<PostResponseDto> create(PostRequestDto postRequestDto, Long userId, Long categoryId) {
         PostResponseDto responsePost = postService.createPost(postRequestDto,userId,categoryId);
         return new ResponseEntity<>(responsePost, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<List<PostResponseDto>> getPostsByUser(Long userId) {
+
+        List<PostResponseDto> responseDto = postService.getPostByUser(userId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<PostResponseDto>> getPostByCategory(Long categoryId) {
+
+        List<PostResponseDto> posts = postService.getPostByCategory(categoryId);
+        return new ResponseEntity<>(posts,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<PostResponseDto>> getAllPost() {
+
+        List<PostResponseDto> posts = postService.getAllPost();
+        return new ResponseEntity<>(posts,HttpStatus.OK);
     }
 }
