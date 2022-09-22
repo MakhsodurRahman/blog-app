@@ -1,13 +1,14 @@
 package com.blogapp.service.definition;
 
 import com.blogapp.dto.post.PostRequestDto;
+import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.entity.Post;
 
 import java.util.List;
 
 public interface PostService {
 
-    Post createPost(PostRequestDto postRequestDto);
+    PostResponseDto createPost(PostRequestDto postRequestDto, Long userId, Long categoryId);
 
     Post UpdatePost(PostRequestDto postRequestDto,Long id);
 
