@@ -2,6 +2,7 @@ package com.blogapp.service.definition;
 
 import com.blogapp.dto.categorydto.CategoryRequestDto;
 import com.blogapp.dto.categorydto.CategoryResponseDto;
+import com.blogapp.entity.Category;
 
 import java.util.List;
 
