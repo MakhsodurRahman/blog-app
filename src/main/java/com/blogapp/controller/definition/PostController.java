@@ -3,6 +3,7 @@ package com.blogapp.controller.definition;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.payloads.ApiResponse;
+import com.blogapp.payloads.PostResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,11 @@ public interface PostController {
     public ResponseEntity<List<PostResponseDto>> getPostByCategory(@PathVariable Long categoryId);
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<List<PostResponseDto>> getAllPost(
+    public ResponseEntity<PostResponse> getAllPost(
             @RequestParam(value = "pageNumber", defaultValue = "0",required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "Id",required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
     );
 
     @GetMapping("/getPostById/{id}")
