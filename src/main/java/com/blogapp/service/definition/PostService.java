@@ -3,6 +3,7 @@ package com.blogapp.service.definition;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.entity.Post;
+import com.blogapp.payloads.PostResponse;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface PostService {
 
     PostResponseDto getPostById(Long id);
 
-    List<PostResponseDto> getAllPost(Integer pageNumber, Integer pageSize);
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize,String sortBy,String sortDir);
 
     List<PostResponseDto> getPostByCategory(Long categoryId);
 
