@@ -3,6 +3,8 @@ package com.blogapp.controller.implementation;
 import com.blogapp.controller.definition.PostController;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
+import com.blogapp.entity.Post;
+import com.blogapp.payloads.ApiResponse;
 import com.blogapp.service.definition.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,20 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
+    public ResponseEntity<PostResponseDto> update(PostRequestDto postRequestDto,Long postId) {
+        PostResponseDto post = postService.updatePost(postRequestDto,postId);
+
+        return new ResponseEntity<>(post,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> deletePost(Long postId) {
+
+        postService.deletePost(postId);
+        return new ResponseEntity(new ApiResponse("post deleted",true), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<List<PostResponseDto>> getPostsByUser(Long userId) {
 
         List<PostResponseDto> responseDto = postService.getPostByUser(userId);
@@ -43,5 +59,11 @@ public class PostControllerImpl implements PostController {
 
         List<PostResponseDto> posts = postService.getAllPost();
         return new ResponseEntity<>(posts,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PostResponseDto> getPost(Long id) {
+        PostResponseDto post = postService.getPostById(id);
+        return new ResponseEntity<>(post,HttpStatus.OK);
     }
 }
