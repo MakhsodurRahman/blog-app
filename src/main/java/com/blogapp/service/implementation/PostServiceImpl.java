@@ -6,6 +6,7 @@ import com.blogapp.entity.Category;
 import com.blogapp.entity.Post;
 import com.blogapp.entity.User;
 import com.blogapp.exception.ResourceNotFoundException;
+import com.blogapp.payloads.PostResponse;
 import com.blogapp.repository.CategoryRepository;
 import com.blogapp.repository.PostRepository;
 import com.blogapp.repository.UserRepository;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -81,15 +83,31 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getAllPost(Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
 
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Sort sort = null;
+        if(sortDir.equalsIgnoreCase("asc")){
+            sort = Sort.by(sortBy).ascending();
+        }else {
+            sort = Sort.by(sortBy).descending();
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber,pageSize, sort);
         Page<Post> pagePost = postRepository.findAll(pageable);
 
         List<Post> posts = pagePost.getContent();
 
         List<PostResponseDto> responseDtos = posts.stream().map((post)-> modelMapper.map(post,PostResponseDto.class)).collect(Collectors.toList());
-        return responseDtos;
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(responseDtos);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setTotalElements(pagePost.getTotalElements());
+        postResponse.setLastPage(pagePost.isLast());
+
+        return postResponse;
     }
 
     @Override
