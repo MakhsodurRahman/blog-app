@@ -3,7 +3,6 @@ package com.blogapp.controller.implementation;
 import com.blogapp.controller.definition.PostController;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
-import com.blogapp.entity.Post;
 import com.blogapp.payloads.ApiResponse;
 import com.blogapp.payloads.PostResponse;
 import com.blogapp.service.definition.PostService;
@@ -66,5 +65,11 @@ public class PostControllerImpl implements PostController {
     public ResponseEntity<PostResponseDto> getPost(Long id) {
         PostResponseDto post = postService.getPostById(id);
         return new ResponseEntity<>(post,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<PostResponseDto>> search(String keyword) {
+        List<PostResponseDto> responseDto = postService.searchPost(keyword);
+        return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 }

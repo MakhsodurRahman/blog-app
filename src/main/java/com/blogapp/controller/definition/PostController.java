@@ -1,5 +1,6 @@
 package com.blogapp.controller.definition;
 
+import com.blogapp.config.AppConstants;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.payloads.ApiResponse;
@@ -29,13 +30,16 @@ public interface PostController {
 
     @GetMapping("/getAllPost")
     public ResponseEntity<PostResponse> getAllPost(
-            @RequestParam(value = "pageNumber", defaultValue = "0",required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "Id",required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+            @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir
     );
 
     @GetMapping("/getPostById/{id}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id);
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<PostResponseDto>> search(@PathVariable String keyword);
 
 }
