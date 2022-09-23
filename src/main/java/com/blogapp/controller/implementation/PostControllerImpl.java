@@ -5,6 +5,7 @@ import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.entity.Post;
 import com.blogapp.payloads.ApiResponse;
+import com.blogapp.payloads.PostResponse;
 import com.blogapp.service.definition.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,9 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
-    public ResponseEntity<List<PostResponseDto>> getAllPost(Integer pageNumber,Integer pageSize) {
+    public ResponseEntity<PostResponse> getAllPost(Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
 
-        List<PostResponseDto> posts = postService.getAllPost(pageNumber,pageSize);
+        PostResponse posts = postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
         return new ResponseEntity<>(posts,HttpStatus.OK);
     }
 
