@@ -11,6 +11,9 @@ import com.blogapp.repository.PostRepository;
 import com.blogapp.repository.UserRepository;
 import com.blogapp.service.definition.PostService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -49,23 +52,41 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponseDto UpdatePost(PostRequestDto postRequestDto, Long id) {
-        return null;
+    public PostResponseDto updatePost(PostRequestDto postRequestDto, Long id) {
+
+        Post post = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("post "," post id ",id));
+
+        post.setPostTitle(postRequestDto.getPostTitle());
+        post.setContent(postRequestDto.getContent());
+        post.setImageName(postRequestDto.getImageName());
+        Post savePost = postRepository.save(post);
+
+        return modelMapper.map(savePost,PostResponseDto.class);
     }
 
     @Override
     public void deletePost(Long id) {
 
+        Post post = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("post "," id ", id));
+        postRepository.delete(post);
+
     }
 
     @Override
     public PostResponseDto getPostById(Long id) {
-        return null;
+
+        Post post = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("post "," id ", id));
+
+        return modelMapper.map(post,PostResponseDto.class);
     }
 
     @Override
-    public List<PostResponseDto> getAllPost() {
-        List<Post> posts = postRepository.findAll();
+    public List<PostResponseDto> getAllPost(Integer pageNumber, Integer pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<Post> pagePost = postRepository.findAll(pageable);
+
+        List<Post> posts = pagePost.getContent();
 
         List<PostResponseDto> responseDtos = posts.stream().map((post)-> modelMapper.map(post,PostResponseDto.class)).collect(Collectors.toList());
         return responseDtos;

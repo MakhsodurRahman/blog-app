@@ -55,9 +55,9 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
-    public ResponseEntity<List<PostResponseDto>> getAllPost() {
+    public ResponseEntity<List<PostResponseDto>> getAllPost(Integer pageNumber,Integer pageSize) {
 
-        List<PostResponseDto> posts = postService.getAllPost();
+        List<PostResponseDto> posts = postService.getAllPost(pageNumber,pageSize);
         return new ResponseEntity<>(posts,HttpStatus.OK);
     }
 

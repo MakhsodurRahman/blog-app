@@ -27,7 +27,10 @@ public interface PostController {
     public ResponseEntity<List<PostResponseDto>> getPostByCategory(@PathVariable Long categoryId);
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<List<PostResponseDto>> getAllPost();
+    public ResponseEntity<List<PostResponseDto>> getAllPost(
+            @RequestParam(value = "pageNumber", defaultValue = "0",required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize
+    );
 
     @GetMapping("/getPostById/{id}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id);
