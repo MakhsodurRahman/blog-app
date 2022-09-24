@@ -1,15 +1,17 @@
 package com.blogapp.controller.definition;
 
 import com.blogapp.config.AppConstants;
-import com.blogapp.dto.FileResponse;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.payloads.ApiResponse;
 import com.blogapp.payloads.PostResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
 public interface PostController {
 
     @PostMapping("/user/{userId}/category/{categoryId}/create")
-    public ResponseEntity<PostResponseDto> create(@RequestBody PostRequestDto postRequestDto, @PathVariable Long userId, @PathVariable Long categoryId);
+    public ResponseEntity<PostResponseDto> create(@ModelAttribute PostRequestDto postRequestDto, @PathVariable Long userId, @PathVariable Long categoryId,MultipartFile image) throws IOException;
 
     @PutMapping("/update/{postId}")
     public ResponseEntity<PostResponseDto> update(@RequestBody PostRequestDto postRequestDto,@PathVariable Long postId);
@@ -45,8 +47,13 @@ public interface PostController {
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<PostResponseDto>> search(@PathVariable String keyword);
 
-    @PostMapping("/image/upload/{postId}")
-    public ResponseEntity<PostResponseDto> fileUpload(
-            @RequestParam("image") MultipartFile image,
-            @PathVariable Long postId) throws IOException;
+//    @PostMapping("/image/upload/{postId}")
+//    public ResponseEntity<PostResponseDto> fileUpload(
+//            @RequestParam("image") MultipartFile image,
+//            @PathVariable Long postId) throws IOException;
+
+    @GetMapping(value = "/images/{imageName}",produces = MediaType.IMAGE_JPEG_VALUE)
+    public void downloadImage(
+            @PathVariable String imageName,
+            HttpServletResponse response ) throws IOException;
 }
