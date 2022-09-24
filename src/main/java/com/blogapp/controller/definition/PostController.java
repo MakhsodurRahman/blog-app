@@ -1,13 +1,16 @@
 package com.blogapp.controller.definition;
 
 import com.blogapp.config.AppConstants;
+import com.blogapp.dto.FileResponse;
 import com.blogapp.dto.post.PostRequestDto;
 import com.blogapp.dto.post.PostResponseDto;
 import com.blogapp.payloads.ApiResponse;
 import com.blogapp.payloads.PostResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api/v1/post")
@@ -37,9 +40,13 @@ public interface PostController {
     );
 
     @GetMapping("/getPostById/{id}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id);
+    public ResponseEntity<PostRequestDto> getPost(@PathVariable Long id);
 
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<PostResponseDto>> search(@PathVariable String keyword);
 
+    @PostMapping("/image/upload/{postId}")
+    public ResponseEntity<PostResponseDto> fileUpload(
+            @RequestParam("image") MultipartFile image,
+            @PathVariable Long postId) throws IOException;
 }
