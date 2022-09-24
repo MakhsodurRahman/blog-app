@@ -1,6 +1,7 @@
 package com.blogapp.exception;
 
 import com.blogapp.payloads.ApiResponse;
+import org.springframework.core.NestedIOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<Map<String,String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         Map<String,String> response = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error)->{
