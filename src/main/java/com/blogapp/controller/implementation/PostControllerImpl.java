@@ -8,13 +8,19 @@ import com.blogapp.payloads.ApiResponse;
 import com.blogapp.payloads.PostResponse;
 import com.blogapp.service.definition.FileService;
 import com.blogapp.service.definition.PostService;
+import org.hibernate.engine.jdbc.StreamUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -32,8 +38,8 @@ public class PostControllerImpl implements PostController {
     }
 
     @Override
-    public ResponseEntity<PostResponseDto> create(PostRequestDto postRequestDto, Long userId, Long categoryId) {
-        PostResponseDto responsePost = postService.createPost(postRequestDto,userId,categoryId);
+    public ResponseEntity<PostResponseDto> create(PostRequestDto postRequestDto, Long userId, Long categoryId,MultipartFile image) throws IOException {
+        PostResponseDto responsePost = postService.createPost(postRequestDto,userId,categoryId,image);
         return new ResponseEntity<>(responsePost, HttpStatus.CREATED);
     }
 
@@ -84,16 +90,24 @@ public class PostControllerImpl implements PostController {
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<PostResponseDto> fileUpload(MultipartFile image, Long postId) throws IOException {
+//    @Override
+//    public ResponseEntity<PostResponseDto> fileUpload(MultipartFile image, Long postId) throws IOException {
+//
+//        String fileName = null;
+//        PostRequestDto response = postService.getPostById(postId);
+//        fileName = fileService.uploadImage(image, path);
+//        response.setImageName(fileName);
+//        PostResponseDto dto = postService.updatePost(response, postId);
+//
+//        return new ResponseEntity<>(dto, HttpStatus.OK);
+//    }
 
-        String fileName = null;
-        PostRequestDto response = postService.getPostById(postId);
-        fileName = fileService.uploadImage(image, path);
-        response.setImageName(fileName);
-        PostResponseDto dto = postService.updatePost(response, postId);
+     @Override
+     public void downloadImage(String imageName, HttpServletResponse response ) throws IOException {
+        InputStream inputStream = fileService.getResource(path,imageName);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(inputStream,response.getOutputStream());
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 }
