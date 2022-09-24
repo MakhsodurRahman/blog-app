@@ -10,14 +10,18 @@ import com.blogapp.payloads.PostResponse;
 import com.blogapp.repository.CategoryRepository;
 import com.blogapp.repository.PostRepository;
 import com.blogapp.repository.UserRepository;
+import com.blogapp.service.definition.FileService;
 import com.blogapp.service.definition.PostService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,26 +33,32 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final FileService fileService;
 
-    public PostServiceImpl(ModelMapper modelMapper, PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public PostServiceImpl(ModelMapper modelMapper, PostRepository postRepository, UserRepository userRepository, CategoryRepository categoryRepository, FileService fileService) {
         this.modelMapper = modelMapper;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.fileService = fileService;
     }
+    @Value("${project.image}")
+    private String path;
 
     @Override
-    public PostResponseDto createPost(PostRequestDto postRequestDto, Long userId, Long categoryId) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto, Long userId, Long categoryId, MultipartFile image) throws IOException {
 
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("user "," id ",userId));
 
         Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("user "," id ",categoryId));
+        String fileName = fileService.uploadImage(image, path);
 
         Post post = modelMapper.map(postRequestDto,Post.class);
         post.setImageName("default.png");
         post.setAddDate(new Date());
         post.setUser(user);
         post.setCategory(category);
+        post.setImageName(fileName);
         Post savePost = postRepository.save(post);
         return modelMapper.map(savePost,PostResponseDto.class);
     }
