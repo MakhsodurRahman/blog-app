@@ -42,7 +42,7 @@ public interface PostController {
     );
 
     @GetMapping("/getPostById/{id}")
-    public ResponseEntity<PostRequestDto> getPost(@PathVariable Long id);
+    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long id);
 
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<PostResponseDto>> search(@PathVariable String keyword);
