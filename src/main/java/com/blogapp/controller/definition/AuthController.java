@@ -13,7 +13,5 @@ public interface AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken(
             @RequestBody JwtAuthRequest request
-            );
-
-    void authenticate(String userName, String password);
+            ) throws Exception;
 }

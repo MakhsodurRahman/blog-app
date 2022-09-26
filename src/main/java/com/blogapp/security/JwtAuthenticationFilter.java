@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 //jwt part : 4
 @Component
@@ -30,50 +31,71 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-//        1.get the token
+//		1. get token
 
-        String requestToken = request.getHeader("Authorization");
-        System.out.println("token :: "+requestToken);
+        final String authorizationHeader = request.getHeader("Authorization");
+        Enumeration<String> headerNames = request.getHeaderNames();
 
-        String userName = null;
-        String token = null;
-        if(requestToken != null && requestToken.startsWith("Bearer")){
-            token = requestToken.substring(7);
-            System.out.println("sub token is : "+token);
+        while(headerNames.hasMoreElements())
+        {
+            System.out.println(headerNames.nextElement());
+        }
+        // Bearer 2352523sdgsg
+
+        System.out.println(authorizationHeader);
+
+        String username = null;
+
+        String jwtToken = null;
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+
+            jwtToken = authorizationHeader.substring(7);
 
             try {
-                userName = this.jwtTokenHelper.getUsernameFromToken(token);
-            }catch (IllegalArgumentException e){
-                System.out.println("unable to get jwt token");
-            }catch (ExpiredJwtException e){
-                System.out.println("jwt token  has expired");
-            }catch (MalformedJwtException e){
+                username = this.jwtTokenHelper.extractUsername(jwtToken);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Unable to get Jwt token");
+            } catch (ExpiredJwtException e) {
+                System.out.println("Jwt token has expired");
+            } catch (MalformedJwtException e) {
                 System.out.println("invalid jwt");
-            }
-        }
-        else {
-            System.out.println("jwt token dose not start with Bearer ");
-        }
-        //once get the token , now validate
-        if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-            if(jwtTokenHelper.validateToken(token,userDetails)){
-                //authentication required if everything done
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             }
-            else {
-                System.out.println("invalid jwt token");
-            }
-        }else{
-            System.out.println("user name is null or context is not null");
+
+        } else {
+            System.out.println("Jwt token does not begin with Bearer");
         }
 
-        filterChain.doFilter(request,response);
+        // once we get the token , now validate
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+            if (this.jwtTokenHelper.validateToken(jwtToken, userDetails)) {
+                // shi chal rha hai
+                // authentication karna hai
+
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+            } else {
+                System.out.println("Invalid jwt token");
+            }
+
+        } else {
+            System.out.println("username is null or context is not null");
+        }
+
+
+        filterChain.doFilter(request, response);
     }
+
 }
