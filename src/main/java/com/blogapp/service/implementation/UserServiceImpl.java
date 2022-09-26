@@ -1,12 +1,16 @@
 package com.blogapp.service.implementation;
 
+import com.blogapp.config.AppConstants;
 import com.blogapp.dto.userdto.UserRequestDto;
 import com.blogapp.dto.userdto.UserResponseDto;
+import com.blogapp.entity.Role;
 import com.blogapp.entity.User;
 import com.blogapp.exception.ResourceNotFoundException;
+import com.blogapp.repository.RoleRepository;
 import com.blogapp.repository.UserRepository;
 import com.blogapp.service.definition.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +21,27 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+    }
+
+    @Override
+    public UserResponseDto registerUser(UserRequestDto userRequestDto) {
+
+        User user = modelMapper.map(userRequestDto,User.class);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role role = roleRepository.findById(Long.valueOf(AppConstants.NORMAL_USER)).get();
+        user.getRoles().add(role);
+
+        User saveUser = userRepository.save(user);
+        return modelMapper.map(user,UserResponseDto.class);
     }
 
     @Override

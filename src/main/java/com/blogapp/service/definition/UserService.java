@@ -6,6 +6,8 @@ import com.blogapp.dto.userdto.UserResponseDto;
 import java.util.List;
 
 public interface UserService {
+
+    UserResponseDto  registerUser(UserRequestDto userRequestDto);
     UserResponseDto createUser(UserRequestDto userRequestDto);
     UserResponseDto updateUser(Long id, UserRequestDto userRequestDto);
     UserResponseDto getUser(Long id);
