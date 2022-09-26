@@ -28,4 +28,5 @@ public class UserRequestDto {
 
     @NotEmpty
     private String about;
+
 }

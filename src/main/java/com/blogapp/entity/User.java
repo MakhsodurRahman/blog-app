@@ -1,6 +1,7 @@
 package com.blogapp.entity;
 
 
+import com.blogapp.dto.role.RoleResponseDto;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,7 @@ public class User implements UserDetails {
 
     @Column(name = "about")
     private String about;
+
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
