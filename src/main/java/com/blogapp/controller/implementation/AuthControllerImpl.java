@@ -3,8 +3,12 @@ package com.blogapp.controller.implementation;
 import com.blogapp.controller.definition.AuthController;
 import com.blogapp.dto.jwt.JwtAuthRequest;
 import com.blogapp.dto.jwt.JwtAuthResponse;
+import com.blogapp.dto.userdto.UserRequestDto;
+import com.blogapp.dto.userdto.UserResponseDto;
+import com.blogapp.entity.User;
 import com.blogapp.exception.ApiException;
 import com.blogapp.security.JwtTokenHelper;
+import com.blogapp.service.definition.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +25,13 @@ public class AuthControllerImpl implements AuthController {
     private final JwtTokenHelper jwtTokenHelper;
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
-    public AuthControllerImpl(JwtTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, AuthenticationManager authenticationManager) {
+    public AuthControllerImpl(JwtTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, UserService userService) {
         this.jwtTokenHelper = jwtTokenHelper;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @Override
@@ -45,6 +51,12 @@ public class AuthControllerImpl implements AuthController {
 
         return ResponseEntity.ok(new JwtAuthResponse(jwt));
 
+    }
+
+    @Override
+    public ResponseEntity<UserResponseDto> register(UserRequestDto userRequestDto) {
+        UserResponseDto user = userService.registerUser(userRequestDto);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
 }
