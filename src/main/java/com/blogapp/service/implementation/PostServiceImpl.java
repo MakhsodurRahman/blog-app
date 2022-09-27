@@ -54,7 +54,6 @@ public class PostServiceImpl implements PostService {
         String fileName = fileService.uploadImage(image, path);
 
         Post post = modelMapper.map(postRequestDto,Post.class);
-        post.setImageName("default.png");
         post.setAddDate(new Date());
         post.setUser(user);
         post.setCategory(category);
