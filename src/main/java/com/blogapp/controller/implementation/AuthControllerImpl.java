@@ -5,7 +5,6 @@ import com.blogapp.dto.jwt.JwtAuthRequest;
 import com.blogapp.dto.jwt.JwtAuthResponse;
 import com.blogapp.dto.userdto.UserRequestDto;
 import com.blogapp.dto.userdto.UserResponseDto;
-import com.blogapp.entity.User;
 import com.blogapp.exception.ApiException;
 import com.blogapp.security.JwtTokenHelper;
 import com.blogapp.service.definition.UserService;
@@ -17,6 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 //jwt step : 7
 @RestController
@@ -54,8 +56,8 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public ResponseEntity<UserResponseDto> register(UserRequestDto userRequestDto) {
-        UserResponseDto user = userService.registerUser(userRequestDto);
+    public ResponseEntity<UserResponseDto> register(UserRequestDto userRequestDto, MultipartFile image) throws IOException {
+        UserResponseDto user = userService.registerUser(userRequestDto,image);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
