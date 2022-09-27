@@ -8,11 +8,15 @@ import com.blogapp.entity.User;
 import com.blogapp.exception.ResourceNotFoundException;
 import com.blogapp.repository.RoleRepository;
 import com.blogapp.repository.UserRepository;
+import com.blogapp.service.definition.FileService;
 import com.blogapp.service.definition.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,19 +27,26 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final FileService fileService;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository, FileService fileService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.fileService = fileService;
     }
 
-    @Override
-    public UserResponseDto registerUser(UserRequestDto userRequestDto) {
+    @Value("${project.image}")
+    private String path;
 
+    @Override
+    public UserResponseDto registerUser(UserRequestDto userRequestDto, MultipartFile image) throws IOException {
+
+        String fileName = fileService.uploadImage(image,path);
         User user = modelMapper.map(userRequestDto,User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setImageName(fileName);
 
         Role role = roleRepository.findById(Long.valueOf(AppConstants.NORMAL_USER)).get();
         user.getRoles().add(role);

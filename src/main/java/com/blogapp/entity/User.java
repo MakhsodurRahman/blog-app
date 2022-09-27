@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(name = "about")
     private String about;
 
+    @Column(name = "user_image")
+    private String imageName;
+
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();

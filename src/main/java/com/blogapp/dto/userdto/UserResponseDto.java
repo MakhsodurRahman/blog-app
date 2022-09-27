@@ -20,6 +20,7 @@ public class UserResponseDto {
     @JsonIgnore
     private String password;
     private String about;
+    private String imageName;
 
     private Set<RoleResponseDto> roles = new HashSet<>();
 }

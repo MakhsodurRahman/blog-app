@@ -28,5 +28,6 @@ public class UserRequestDto {
 
     @NotEmpty
     private String about;
+    private String imageName;
 
 }
